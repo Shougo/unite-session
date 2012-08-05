@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 28 Jul 2012.
+" Last Modified: 05 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ set cpo&vim
 call unite#util#set_default('g:unite_source_session_default_session_name',
       \ 'default')
 call unite#util#set_default('g:unite_source_session_options',
-      \ 'blank,curdir,folds,help,winsize')
+      \ 'curdir,folds,help,winsize')
 call unite#util#set_default('g:unite_source_session_path',
       \ g:unite_data_directory . '/session')
 "}}}

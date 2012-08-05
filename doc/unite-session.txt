@@ -107,6 +107,9 @@ EXAMPLES					*unite-session-examples*
 ==============================================================================
 CHANGELOG					*unite-session-changelog*
 
+2012-08-05
+- Deleted blank.
+
 2012-07-28
 - Initial version.
 
