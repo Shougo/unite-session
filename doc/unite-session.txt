@@ -86,6 +86,11 @@ g:unite_source_session_enable_auto_save		*g:unite_source_session_enable_auto_sav
 		
 		The default value is "0".
 
+g:unite_source_session_enable_beta_features	*g:unite_source_session_enable_beta_features*
+		Enable beta features.
+		
+		The default value is "0".
+
 ==============================================================================
 ACTIONS						*unite-session-actions*
 
@@ -109,6 +114,7 @@ CHANGELOG					*unite-session-changelog*
 
 2012-08-05
 - Deleted blank.
+- Added g:unite_source_session_enable_beta_features option.
 
 2012-07-28
 - Initial version.

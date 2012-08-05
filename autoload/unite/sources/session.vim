@@ -31,13 +31,15 @@ set cpo&vim
 call unite#util#set_default('g:unite_source_session_default_session_name',
       \ 'default')
 call unite#util#set_default('g:unite_source_session_options',
-      \ 'curdir,folds,help,winsize')
+      \ 'buffers,curdir,folds,help,winsize')
 call unite#util#set_default('g:unite_source_session_path',
       \ g:unite_data_directory . '/session')
+call unite#util#set_default(
+      \ 'g:unite_source_session_enable_beta_features', 0)
 "}}}
 
 function! unite#sources#session#define()"{{{
-  return v:version >= 703 ? s:source : {}
+  return s:source : {}
 endfunction"}}}
 
 function! unite#sources#session#_save(filename)"{{{
@@ -65,6 +67,9 @@ function! unite#sources#session#_save(filename)"{{{
     if tabnr != 1
       call add(append, 'tabnew')
     endif
+    if v:version < 703
+      continue
+    endif
 
     let cwd = gettabvar(tabnr, 'cwd')
     let title = gettabvar(tabnr, 'title')
@@ -81,7 +86,8 @@ function! unite#sources#session#_save(filename)"{{{
             \ 'call settabvar(%d, "title", %s)', tabnr,
             \   string(title)))
     endif
-    if type(unite_buffer_dictionary) == type({})
+    if g:unite_source_session_enable_beta_features &&
+          \ type(unite_buffer_dictionary) == type({})
       for bufnr in keys(unite_buffer_dictionary)
         let filetype = getbufvar(bufnr, '&filetype')
         if filetype ==# 'vimfiler'
@@ -99,9 +105,6 @@ function! unite#sources#session#_save(filename)"{{{
           call add(append, printf(
                 \ 'call vimshell#switch_shell(%s, %s)',
                 \ string(current_dir), string(context)))
-        elseif filereadable(fnamemodify(bufname(bufnr), ':p'))
-          " Append buffers.
-          call add(append, 'edit `='.string(bufname(bufnr)).'`')
         endif
       endfor
     endif
@@ -113,8 +116,7 @@ function! unite#sources#session#_save(filename)"{{{
 
   call add(append, 'tabnext '.tabpagenr())
 
-  let lines = filter(readfile(filename),
-        \ "v:val !~ '^\%(badd\|file\|edit\) '")
+  let lines = readfile(filename)
 
   call writefile(lines + append, filename)
 endfunction"}}}
