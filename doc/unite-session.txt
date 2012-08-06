@@ -112,6 +112,9 @@ EXAMPLES					*unite-session-examples*
 ==============================================================================
 CHANGELOG					*unite-session-changelog*
 
+2012-08-06
+- Fixed error.
+
 2012-08-05
 - Deleted blank.
 - Added g:unite_source_session_enable_beta_features option.

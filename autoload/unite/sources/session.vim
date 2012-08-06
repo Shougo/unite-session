@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 05 Aug 2012.
+" Last Modified: 06 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -39,7 +39,7 @@ call unite#util#set_default(
 "}}}
 
 function! unite#sources#session#define()"{{{
-  return s:source : {}
+  return s:source
 endfunction"}}}
 
 function! unite#sources#session#_save(filename)"{{{
