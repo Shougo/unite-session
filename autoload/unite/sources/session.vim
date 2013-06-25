@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Aug 2012.
+" Last Modified: 25 Jun 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -51,7 +51,8 @@ function! unite#sources#session#_save(filename)"{{{
     call mkdir(g:unite_source_session_path, 'p')
   endif
 
-  let filename = s:get_session_path(a:filename)
+  let filename = s:get_session_path(
+        \ unite#util#substitute_path_separator(a:filename))
 
   let save_session_options = &sessionoptions
   let &sessionoptions = g:unite_source_session_options
