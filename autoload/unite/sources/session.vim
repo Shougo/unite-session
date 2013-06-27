@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Jun 2013.
+" Last Modified: 27 Jun 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -42,7 +42,7 @@ function! unite#sources#session#define()"{{{
   return s:source
 endfunction"}}}
 
-function! unite#sources#session#_save(filename)"{{{
+function! unite#sources#session#_save(filename) "{{{
   if unite#util#is_cmdwin()
     return
   endif
@@ -121,7 +121,7 @@ function! unite#sources#session#_save(filename)"{{{
 
   call writefile(lines + append, filename)
 endfunction"}}}
-function! unite#sources#session#_load(filename)"{{{
+function! unite#sources#session#_load(filename) "{{{
   if unite#util#is_cmdwin()
     return
   endif
@@ -130,7 +130,8 @@ function! unite#sources#session#_load(filename)"{{{
     silent! cscope kill -1
   endif
 
-  let filename = s:get_session_path(a:filename)
+  let filename = s:get_session_path(
+        \ unite#util#substitute_path_separator(a:filename))
   if !filereadable(filename)
     call unite#sources#session#_save(filename)
     return
@@ -228,7 +229,7 @@ let s:source.action_table.rename = {
       \ 'is_quit' : 0,
       \ 'is_selectable' : 1,
       \ }
-function! s:source.action_table.rename.func(candidates)"{{{
+function! s:source.action_table.rename.func(candidates) "{{{
   for candidate in a:candidates
     let session_name = input(printf(
           \ 'New session name: %s -> ', candidate.word), candidate.word)
@@ -250,12 +251,13 @@ function! s:get_session_path(filename)
     let filename = g:unite_source_session_default_session_name
   endif
 
+  if filename !~ '.vim$'
+    let filename .= '.vim'
+  endif
+
   if filename !~ '^\%(/\|\a\+:/\)'
     " Relative path.
     let filename = g:unite_source_session_path . '/' . filename
-    if filename !~ '.vim$'
-      let filename .= '.vim'
-    endif
   endif
 
   return filename
