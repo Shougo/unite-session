@@ -228,7 +228,8 @@ function! s:source_new.change_candidates(args, context) "{{{
   endfor
 
   " Return new session candidate
-  return [{ 'word': input, 'abbr': '[new session] ' . input, action__path': input }]
+  "return [{ 'word': input, 'abbr': '[new session] ' . input, action__path': input }]
+  return candidates
 endfunction"}}}
 
 " Actions"{{{
