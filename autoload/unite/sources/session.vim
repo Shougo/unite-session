@@ -1,7 +1,8 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 Oct 2013.
+"          Jason Housley <HousleyJK@gmail.com>
+" Last Modified: 20 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -42,7 +43,7 @@ function! unite#sources#session#define()"{{{
   return [s:source, s:source_new]
 endfunction"}}}
 
-function! unite#sources#session#_save(filename) "{{{
+function! unite#sources#session#_save(filename, force) "{{{
   if unite#util#is_cmdwin()
     return
   endif
@@ -52,6 +53,11 @@ function! unite#sources#session#_save(filename) "{{{
   endif
 
   let filename = s:get_session_path(a:filename)
+
+  if filereadable(filename) && !a:force
+    call unite#print_error('Session already exists.')
+    return
+  endif
 
   let save_session_options = &sessionoptions
   let &sessionoptions = g:unite_source_session_options
@@ -131,7 +137,7 @@ function! unite#sources#session#_load(filename) "{{{
 
   let filename = s:get_session_path(a:filename)
   if !filereadable(filename)
-    call unite#sources#session#_save(filename)
+    call unite#sources#session#_save(filename, 1)
     return
   endif
 
@@ -217,19 +223,8 @@ function! s:source_new.change_candidates(args, context) "{{{
     return []
   endif
 
-  let candidates = call s:source.gather_candidates(args, context)
-
-  " TODO: Optimize this
-  for candidate in candidates
-    if candidate.word ==? input
-         call unite#print_error('Input matches an existing session name.')
-         return []
-    endif
-  endfor
-
   " Return new session candidate
-  "return [{ 'word': input, 'abbr': '[new session] ' . input, action__path': input }]
-  return candidates
+  return [{ 'word': input, 'abbr': '[new session] ' . input, 'action__path': input }]
 endfunction"}}}
 
 " Actions"{{{
@@ -269,18 +264,25 @@ function! s:source.action_table.rename.func(candidates) "{{{
     endif
   endfor
 endfunction"}}}
-let s:source.action_table.save_as = {
-      \ 'description' : 'save current session as sesison name',
+let s:source.action_table.save = {
+      \ 'description' : 'save current session as candidate',
       \ 'is_invalidate_cache' : 1,
       \ 'is_quit' : 0,
       \ 'is_selectable' : 1,
       \ }
-function! s:source.action_table.save_as.func(candidates) "{{{
+function! s:source.action_table.save.func(candidates) "{{{
   for candidate in a:candidates
     if input('Really save the current session as: '
           \ . candidate.word . '? ') =~? 'y\%[es]'
-      call unite#sources#session#_save(candidate.word) 
+      call unite#sources#session#_save(candidate.word, 1)
     endif
+  endfor
+endfunction"}}}
+let s:source_new.action_table.save = s:source.action_table.save
+function! s:source_new.action_table.save.func(candidates) "{{{
+  for candidate in a:candidates
+      call unite#sources#session#_save(candidate.word, 0)
+      close
   endfor
 endfunction"}}}
 "}}}
