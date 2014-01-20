@@ -39,7 +39,7 @@ call unite#util#set_default(
 "}}}
 
 function! unite#sources#session#define()"{{{
-  return s:source
+  return [s:source, s:source_new]
 endfunction"}}}
 
 function! unite#sources#session#_save(filename) "{{{
@@ -200,6 +200,37 @@ function! s:source.gather_candidates(args, context)"{{{
   return candidates
 endfunction"}}}
 
+
+" New session only source
+
+let s:source_new = {
+      \ 'name' : 'session/new',
+      \ 'description' : 'session candidates from input',
+      \ 'default_action' : 'save',
+      \ 'action_table' : {},
+      \}
+
+function! s:source_new.change_candidates(args, context) "{{{
+  let input = substitute(substitute(
+        \ a:context.input, '\\ ', ' ', 'g'), '^\a\+:\zs\*/', '/', '')
+  if input == ''
+    return []
+  endif
+
+  let candidates = call s:source.gather_candidates(args, context)
+
+  " TODO: Optimize this
+  for candidate in candidates
+    if candidate.word ==? input
+         call unite#print_error('Input matches an existing session name.')
+         return []
+    endif
+  endfor
+
+  " Return new session candidate
+  return [{ 'word': input, 'abbr': '[new session] ' . input, action__path': input }]
+endfunction"}}}
+
 " Actions"{{{
 let s:source.action_table.load = {
       \ 'description' : 'load this session',
@@ -234,6 +265,20 @@ function! s:source.action_table.rename.func(candidates) "{{{
     if session_name != '' && session_name !=# candidate.word
       call rename(candidate.action__path,
             \ s:get_session_path(session_name))
+    endif
+  endfor
+endfunction"}}}
+let s:source.action_table.save_as = {
+      \ 'description' : 'save current session as sesison name',
+      \ 'is_invalidate_cache' : 1,
+      \ 'is_quit' : 0,
+      \ 'is_selectable' : 1,
+      \ }
+function! s:source.action_table.save_as.func(candidates) "{{{
+  for candidate in a:candidates
+    if input('Really save the current session as: '
+          \ . candidate.word . '? ') =~? 'y\%[es]'
+      call unite#sources#session#_save(candidate.word) 
     endif
   endfor
 endfunction"}}}
