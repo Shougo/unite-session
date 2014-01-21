@@ -21,12 +21,12 @@ Usage
 Commands
 --------
 
-Save session data in <session-name>. This will override the session
+Save session data in `<session-name>`. This will override the session
 if it exists.
 
     :UniteSessionSave <session-name>
 
-Load a session by <session-name>. This will create a new session with 
+Load a session by `<session-name>`. This will create a new session with 
 the given name if none exists.
 
     :UniteSessionLoad <session-name>
