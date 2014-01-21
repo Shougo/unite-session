@@ -21,17 +21,15 @@ Usage
 Commands
 --------
 
-:UniteSessionSave session-name
-                Saves session data in session-name.
-                Automatically saves over session-name if it exists.
-                If session-name is omitted, |v:this_session| or
-                |g:unite_source_session_default_session_name| is used.
+Save session data in <session-name>. This will override the session
+if it exists.
 
-:UniteSessionLoad session-name
-                Loads session data from session-name.
-                If session-name is omitted, |v:this_session| or
-                |g:unite_source_session_default_session_name| is used.
-                If session data is not found, it is created.
+    :UniteSessionSave <session-name>
+
+Load a session by <session-name>. This will create a new session with 
+the given name if none exists.
+
+    :UniteSessionLoad <session-name>
 
 
 
