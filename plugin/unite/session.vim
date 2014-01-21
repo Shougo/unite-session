@@ -36,7 +36,7 @@ let g:unite_source_session_enable_auto_save =
       \ get(g:, 'unite_source_session_enable_auto_save', 0)
 
 command! -nargs=? -complete=customlist,unite#sources#session#_complete
-      \ UniteSessionSave call unite#sources#session#_save(<q-args>) 
+      \ UniteSessionSave call unite#sources#session#_save(<q-args>)
 
 command! -nargs=? -complete=customlist,unite#sources#session#_complete
       \ UniteSessionLoad call unite#sources#session#_load(<q-args>)
