@@ -43,7 +43,7 @@ function! unite#sources#session#define()"{{{
   return [s:source, s:source_new]
 endfunction"}}}
 
-function! unite#sources#session#_save(filename, force) "{{{
+function! unite#sources#session#_save(filename, ...) "{{{
   if unite#util#is_cmdwin()
     return
   endif
@@ -54,7 +54,8 @@ function! unite#sources#session#_save(filename, force) "{{{
 
   let filename = s:get_session_path(a:filename)
 
-  if filereadable(filename) && !a:force
+  " Check if this overrides an existing session
+  if filereadable(filename) && a:0 > 1 && a:1
     call unite#print_error('Session already exists.')
     return
   endif
@@ -137,7 +138,7 @@ function! unite#sources#session#_load(filename) "{{{
 
   let filename = s:get_session_path(a:filename)
   if !filereadable(filename)
-    call unite#sources#session#_save(filename, 1)
+    call unite#sources#session#_save(filename)
     return
   endif
 
@@ -274,14 +275,15 @@ function! s:source.action_table.save.func(candidates) "{{{
   for candidate in a:candidates
     if input('Really save the current session as: '
           \ . candidate.word . '? ') =~? 'y\%[es]'
-      call unite#sources#session#_save(candidate.word, 1)
+      call unite#sources#session#_save(candidate.word)
     endif
   endfor
 endfunction"}}}
 let s:source_new.action_table.save = s:source.action_table.save
 function! s:source_new.action_table.save.func(candidates) "{{{
   for candidate in a:candidates
-      call unite#sources#session#_save(candidate.word, 0)
+      " Second argument means check if exists
+      call unite#sources#session#_save(candidate.word, 1) 
       close
   endfor
 endfunction"}}}

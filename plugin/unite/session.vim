@@ -36,7 +36,7 @@ let g:unite_source_session_enable_auto_save =
       \ get(g:, 'unite_source_session_enable_auto_save', 0)
 
 command! -nargs=? -complete=customlist,unite#sources#session#_complete
-      \ UniteSessionSave call unite#sources#session#_save(<q-args>, 1) " Backwards compatible
+      \ UniteSessionSave call unite#sources#session#_save(<q-args>) 
 
 command! -nargs=? -complete=customlist,unite#sources#session#_complete
       \ UniteSessionLoad call unite#sources#session#_load(<q-args>)
@@ -45,7 +45,7 @@ if g:unite_source_session_enable_auto_save
   augroup plugin-unite-source-session
     autocmd!
     autocmd CursorHold *
-          \ if v:this_session != '' | call unite#sources#session#_save('', 1) | endif " Backwards compatible
+          \ if v:this_session != '' | call unite#sources#session#_save('') | endif
   augroup END
 endif
 
