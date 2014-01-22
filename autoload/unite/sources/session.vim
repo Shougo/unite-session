@@ -1,7 +1,8 @@
 "=============================================================================
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 Oct 2013.
+"          Jason Housley <HousleyJK@gmail.com>
+" Last Modified: 22 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -39,10 +40,10 @@ call unite#util#set_default(
 "}}}
 
 function! unite#sources#session#define()"{{{
-  return s:source
+  return [s:source, s:source_new]
 endfunction"}}}
 
-function! unite#sources#session#_save(filename) "{{{
+function! unite#sources#session#_save(filename, ...) "{{{
   if unite#util#is_cmdwin()
     return
   endif
@@ -52,6 +53,12 @@ function! unite#sources#session#_save(filename) "{{{
   endif
 
   let filename = s:get_session_path(a:filename)
+
+  " Check if this overrides an existing session
+  if filereadable(filename) && a:0 && a:1
+    call unite#print_error('Session already exists.')
+    return
+  endif
 
   let save_session_options = &sessionoptions
   let &sessionoptions = g:unite_source_session_options
@@ -200,6 +207,28 @@ function! s:source.gather_candidates(args, context)"{{{
   return candidates
 endfunction"}}}
 
+
+" New session only source
+
+let s:source_new = {
+      \ 'name' : 'session/new',
+      \ 'description' : 'session candidates from input',
+      \ 'default_action' : 'save',
+      \ 'action_table' : {},
+      \}
+
+function! s:source_new.change_candidates(args, context) "{{{
+  let input = substitute(substitute(
+        \ a:context.input, '\\ ', ' ', 'g'), '^\a\+:\zs\*/', '/', '')
+  if input == ''
+    return []
+  endif
+
+  " Return new session candidate
+  return [{ 'word': input, 'abbr': '[new session] ' . input, 'action__path': input }] + 
+         \ s:source.gather_candidates(a:args, a:context)
+endfunction"}}}
+
 " Actions"{{{
 let s:source.action_table.load = {
       \ 'description' : 'load this session',
@@ -235,6 +264,28 @@ function! s:source.action_table.rename.func(candidates) "{{{
       call rename(candidate.action__path,
             \ s:get_session_path(session_name))
     endif
+  endfor
+endfunction"}}}
+let s:source.action_table.save = {
+      \ 'description' : 'save current session as candidate',
+      \ 'is_invalidate_cache' : 1,
+      \ 'is_quit' : 0,
+      \ 'is_selectable' : 1,
+      \ }
+function! s:source.action_table.save.func(candidates) "{{{
+  for candidate in a:candidates
+    if input('Really save the current session as: '
+          \ . candidate.word . '? ') =~? 'y\%[es]'
+      call unite#sources#session#_save(candidate.word)
+    endif
+  endfor
+endfunction"}}}
+let s:source_new.action_table.save = s:source.action_table.save
+function! s:source_new.action_table.save.func(candidates) "{{{
+  for candidate in a:candidates
+      " Second argument means check if exists
+      call unite#sources#session#_save(candidate.word, 1) 
+      close
   endfor
 endfunction"}}}
 "}}}
