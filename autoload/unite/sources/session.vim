@@ -55,7 +55,7 @@ function! unite#sources#session#_save(filename, ...) "{{{
   let filename = s:get_session_path(a:filename)
 
   " Check if this overrides an existing session
-  if filereadable(filename) && a:0 > 1 && a:1
+  if filereadable(filename) && a:0 && a:1
     call unite#print_error('Session already exists.')
     return
   endif
@@ -225,7 +225,8 @@ function! s:source_new.change_candidates(args, context) "{{{
   endif
 
   " Return new session candidate
-  return [{ 'word': input, 'abbr': '[new session] ' . input, 'action__path': input }]
+  return [{ 'word': input, 'abbr': '[new session] ' . input, 'action__path': input }] + 
+         \ s:source.gather_candidates(a:args, a:context)
 endfunction"}}}
 
 " Actions"{{{
