@@ -33,9 +33,8 @@ call unite#util#set_default('g:unite_source_session_default_session_name',
       \ 'default')
 call unite#util#set_default('g:unite_source_session_options',
       \ 'buffers,curdir,folds,help,winsize')
-call unite#get_data_directory()
 call unite#util#set_default('g:unite_source_session_path',
-      \ g:unite_data_directory . '/session')
+      \ unite#get_data_directory() . '/session')
 call unite#util#set_default(
       \ 'g:unite_source_session_enable_beta_features', 0)
 "}}}
