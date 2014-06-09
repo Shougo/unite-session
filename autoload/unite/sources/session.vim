@@ -2,7 +2,7 @@
 " FILE: session.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
 "          Jason Housley <HousleyJK@gmail.com>
-" Last Modified: 22 Jan 2014.
+" Last Modified: 06 Jun 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -33,6 +33,7 @@ call unite#util#set_default('g:unite_source_session_default_session_name',
       \ 'default')
 call unite#util#set_default('g:unite_source_session_options',
       \ 'buffers,curdir,folds,help,winsize')
+call unite#get_data_directory()
 call unite#util#set_default('g:unite_source_session_path',
       \ g:unite_data_directory . '/session')
 call unite#util#set_default(
