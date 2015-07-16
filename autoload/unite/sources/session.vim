@@ -32,7 +32,7 @@ set cpo&vim
 call unite#util#set_default('g:unite_source_session_default_session_name',
       \ 'default')
 call unite#util#set_default('g:unite_source_session_options',
-      \ 'buffers,curdir,folds,help,winsize')
+      \ 'blank,buffers,curdir,folds,help,tabpages,winsize')
 call unite#util#set_default('g:unite_source_session_path',
       \ unite#get_data_directory() . '/session')
 call unite#util#set_default(
