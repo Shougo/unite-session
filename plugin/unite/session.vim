@@ -45,7 +45,7 @@ if g:unite_source_session_enable_auto_save
   augroup plugin-unite-source-session
     autocmd!
     autocmd CursorHold *
-          \ if v:this_session != '' | call unite#sources#session#_save('') | endif
+          \ if ( v:this_session != '' && &ft != 'unite' ) | call unite#sources#session#_save('') | endif
   augroup END
 endif
 
