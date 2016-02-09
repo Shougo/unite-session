@@ -145,7 +145,7 @@ function! unite#sources#session#_load(filename) "{{{
   try
     set eventignore=all
     " Delete all buffers.
-    execute 'silent! 1,' . bufnr('$') . 'bwipeout!'
+    execute 'silent! ' . min(filter(range(1,bufnr('$')), 'bufexists(v:val)')) . ',' . bufnr('$') . 'bwipeout!'
     let bufnr = bufnr('%')
     execute 'silent! source' filename
     execute 'silent! bwipeout!' bufnr
