@@ -44,7 +44,7 @@ command! -nargs=? -complete=customlist,unite#sources#session#_complete
 if g:unite_source_session_enable_auto_save
   augroup plugin-unite-source-session
     autocmd!
-    autocmd CursorHold *
+    autocmd VimLeave,BufEnter,CursorHold *
           \ if (v:this_session != '' && &filetype !=# 'unite') | call unite#sources#session#_save('') | endif
   augroup END
 endif
