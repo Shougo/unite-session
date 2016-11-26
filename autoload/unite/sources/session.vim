@@ -150,7 +150,7 @@ function! unite#sources#session#_load(filename) "{{{
     execute 'silent! source' filename
     execute 'silent! bwipeout!' bufnr
   finally
-    let s:unite_source_session_loading=1
+    let s:unite_source_session_loading = 1
     set eventignore=
     doautoall BufRead
     doautoall FileType
