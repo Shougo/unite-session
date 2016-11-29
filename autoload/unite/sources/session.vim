@@ -44,7 +44,7 @@ function! unite#sources#session#define()"{{{
 endfunction"}}}
 
 function! unite#sources#session#_save(filename, ...) "{{{
-  if unite#util#is_cmdwin()
+  if unite#util#is_cmdwin() || exists("s:unite_source_session_loadng")
     return
   endif
 
@@ -150,6 +150,7 @@ function! unite#sources#session#_load(filename) "{{{
     execute 'silent! source' filename
     execute 'silent! bwipeout!' bufnr
   finally
+    let s:unite_source_session_loading = 1
     set eventignore=
     doautoall BufRead
     doautoall FileType
@@ -157,6 +158,7 @@ function! unite#sources#session#_load(filename) "{{{
     doautoall BufWinEnter
     doautoall TabEnter
     doautoall SessionLoadPost
+    unlet s:unite_source_session_loading
   endtry
 
   for bufnr in range(1, bufnr('$'))
